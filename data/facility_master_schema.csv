@@ -1,0 +1,43 @@
+﻿column,description
+facility_id,시설 고유 ID
+facility_name,시설명
+facility_type,요양병원/요양원
+sido,시도
+sigungu,시군구
+bjdong,법정동
+road_address,도로명주소
+jibun_address,지번주소
+latitude,위도 WGS84
+longitude,경도 WGS84
+facility_open_date,시설 개설일
+capacity,병상수/정원
+current_occupancy,현원
+staff_total,분류대상 종사자 총합
+capacity_staff_ratio,종사자/병상·정원 비율
+location_type,입지유형
+forest_adjacent,산림인접 여부
+forest_distance_m,산림거리 m
+fire_station_name,최근접 소방서
+fire_station_distance_km,소방서 거리 km
+building_pk_status,건축물 PK 상태
+building_pk,대표 건축물 PK
+building_count,관련 사용동 수
+building_name,건물명
+building_approval_date,사용승인일
+building_total_floor,전체/최대 지상층수
+facility_min_floor,시설 최저 사용층
+facility_max_floor,시설 최고 사용층
+facility_floor_text,시설 사용층 표시
+gross_floor_area,연면적 ㎡
+main_purpose,주용도
+building_type,건물유형
+building_type_confidence,건물유형 신뢰도
+aging_type,노후유형
+size_value,규모 판정 원값
+size_type,규모유형
+capacity_value,역량 판정 원값
+capacity_type,역량유형
+final_type_code,5축 최종유형
+data_quality,데이터 품질
+source_note,출처 메모
+updated_at,갱신일
