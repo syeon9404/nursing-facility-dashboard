@@ -1,33 +1,24 @@
 <!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>요양(병)원 시설 현황 시스템</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header><div><p class="eyebrow">시설 유형별 대피체계 표준모델 개발</p><h1>요양(병)원 시설 현황 시스템</h1></div><p id="asof" class="asof"></p></header>
-  <main>
-    <section class="notice"><b>활용 범위</b> 현재 공개·연계자료로 확인되는 기초 현황입니다. 아래 분류는 대피계획 검토를 위한 시설 특성 분류이며, 화재위험도 또는 법정 적합성 판정이 아닙니다.</section>
-    <section class="filters" aria-label="검색 및 필터">
-      <input id="keyword" type="search" placeholder="시설명 또는 주소 검색">
-      <select id="facilityType"><option value="">전체 시설유형</option></select>
-      <select id="sido"><option value="">전체 시·도</option></select>
-      <select id="location"><option value="">전체 입지유형</option></select>
-      <select id="building"><option value="">전체 건물유형</option></select>
-      <select id="response"><option value="">전체 119 접근여건</option></select>
-      <button id="reset">초기화</button>
-    </section>
-    <section class="kpis" id="kpis"></section>
-    <section class="grid">
-      <article class="panel map-panel"><div class="panel-head"><h2>시설 분포 지도</h2><span id="mapCount"></span></div><div id="map"></div></article>
-      <article class="panel"><h2>시설 유형별 분포</h2><div id="typeChart" class="bars"></div></article>
-      <article class="panel"><h2>대피계획 검토용 특성</h2><div id="profileChart" class="bars"></div></article>
-      <article class="panel"><h2>119 접근여건</h2><div id="responseChart" class="bars"></div></article>
-    </section>
-    <section class="panel table-panel"><div class="panel-head"><h2>시설 목록</h2><span id="tableCount"></span></div><div class="table-wrap"><table><thead><tr><th>시설명</th><th>유형</th><th>소재지</th><th>입지·산림</th><th>건물유형</th><th>수용규모</th><th>119 접근</th></tr></thead><tbody id="rows"></tbody></table></div></section>
-    <p class="footnote">분류축: 입지(도심·교외·농어촌/산림인접), 건물(점유·층수), 수용규모, 119 접근여건. 대피능력·방화구획·설비·야간운영은 후속 현장조사 항목으로 관리합니다.</p>
-  </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="app.js"></script>
-</body></html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>요양(병)원 대피체계 시설지도</title>
+<link rel="stylesheet" href="css/style.css">
+<!-- 아래 YOUR_KAKAO_JAVASCRIPT_KEY를 카카오 JavaScript 키로 교체하세요. -->
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_JAVASCRIPT_KEY&libraries=services"></script>
+</head><body>
+<header><div><h1>요양(병)원 시설 현황 지도</h1><small>요양(병)원 시설 유형별 대피체계 표준모델 개발</small></div>
+<div class="search"><input id="search" placeholder="시설명 검색"><button id="searchBtn">검색</button><button id="resetBtn">전국보기</button></div></header>
+<main>
+<aside class="filters"><h3>레이어 / 필터</h3>
+<label>시·도<select id="sido"><option value="">전체</option></select></label>
+<label>시·군·구<select id="sigungu"><option value="">전체</option></select></label>
+<label>시설유형<select id="facilityType"><option value="">전체</option></select></label>
+<label>입지유형<select id="locationType"><option value="">전체</option></select></label>
+<label>산림인접유형<select id="forestType"><option value="">전체</option></select></label>
+<label>건축유형<select id="buildingType"><option value="">전체</option></select></label>
+<label>규모유형<select id="scaleType"><option value="">전체</option></select></label>
+<hr><label class="check"><input type="checkbox" id="showFire" checked> 선택 시설의 지정 소방기관 표시</label>
+<div id="count" class="count"></div></aside>
+<section id="map"></section>
+<aside id="detail"><h3>시설 상세정보</h3><div id="detailBody">지도에서 시설을 선택하세요.</div></aside>
+</main>
+<script src="js/config.js"></script><script src="js/app.js"></script></body></html>
