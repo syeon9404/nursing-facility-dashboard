@@ -1,26 +1,54 @@
-# 요양(병)원 시설 현황 지도 - GitHub Pages 배포본
+# 요양(병)원 시설 현황 지도 — 소방대응여건 보완본
 
-이 폴더는 `260918_data+(2).xlsx`의 DB 시트를 실제 웹 지도용 JSON으로 변환한 배포본입니다.
+기존 Sites 지도 화면을 GitHub Pages로 이전한 정적 웹 사이트입니다.
 
-## 포함 데이터
-- 시설 7,676건
-- 시설 좌표, 시설유형, 시도/시군구
-- 입지유형, 산림인접유형, 건축유형, 규모유형
-- 병상/정원/현원 및 주요 인력
-- `final_nearest_119_name`
-- `final_fire_station_road_m`, `final_fire_station_linear_m`, `final_fire_response_min`
-- 지정 소방기관 좌표 및 시설-소방기관 연결선
+- 시설 7,676개 및 입지·산림인접·건축·규모·소방대응여건 필터
+- 지정 소방기관 기준의 기존 직선거리·도로거리·예상 이동시간·접근유형 보존
+- 기관명과 좌표를 원본에서 대조한 7,605개 시설의 소방기관 표시
+- 좌표 미확인 71개는 위치 확인 필요로 표시하고 다른 기관으로 대체하지 않음
+- 카카오 도로 경로가 없으면 점선 직선 연결로 명확히 구분
 
-## 배포
-1. GitHub에서 새 repository를 만듭니다.
-2. 이 폴더 안의 파일과 폴더를 repository 최상위에 업로드합니다.
-3. `index.html`에서 `YOUR_KAKAO_JAVASCRIPT_KEY`를 본인의 카카오 **JavaScript 키**로 교체합니다.
-4. Kakao Developers에서 Web 플랫폼 사이트 도메인에 GitHub Pages 주소를 등록합니다.
-   예: `https://사용자명.github.io`
-5. GitHub repository → Settings → Pages → Deploy from a branch → `main` / `(root)` → Save.
-6. 잠시 후 표시되는 GitHub Pages 주소로 접속합니다.
+## 이전 ZIP에서 누락됐던 보완사항
 
-## 주의
-GitHub Pages는 정적 웹사이트이므로 JavaScript 키는 브라우저에서 확인할 수 있습니다. 키 자체를 비밀값처럼 숨기는 방식이 아니라, Kakao Developers에서 허용 도메인을 제한해 사용하세요.
+- 지정 소방기관 기준의 기존 분석 결과를 그대로 유지합니다.
+- 상세 패널에 **지정 소방기관·이동경로 보기** 버튼과 좌표 확인 상태를 표시합니다.
+- 기본 연결 7,517개에 원본 대조로 보완한 88개를 추가하여 총 7,605개 시설의 지정기관 좌표가 연결됩니다. 남은 71개는 확인 필요로 표시됩니다.
+- 왼쪽 레이어에 소방대응여건(119접근양호형·119접근취약형) 필터가 추가됩니다.
+- 카카오 경로 파일이 있을 때 도로 경로를 그립니다. 경로가 없으면 지정기관 마커와 직선 점선만 표시하고 도로 경로가 아님을 안내합니다.
+- REST API 키를 브라우저에 넣지 않고 GitHub Actions 비밀 설정에서 사용하는 좌표 보완·경로 생성 코드가 포함됩니다.
 
-현재 지도 연결선은 DB에 저장된 도로거리 결과를 지도 위에 직선으로 시각화한 것입니다. 실제 도로 주행경로 선형을 표시하려면 별도의 길찾기 API 연동이 필요합니다.
+**도로 경로는 아직 생성되지 않았습니다.** 키를 등록하고 아래 작업을 실행해야 표시됩니다. 코드가 포함되었다는 뜻이며 실시간 경로 연동 완료를 뜻하지 않습니다.
+
+## GitHub Pages
+
+ZIP을 풀어 `.github`, `scripts`, `data`, `routes` 폴더를 포함한 내용 전체를 저장소 최상위에 업로드합니다. 기존 ZIP의 HTML·JS를 이번 파일로 교체해야 보완 화면이 표시됩니다.
+
+Settings → Pages → Build and deployment → Source를 **GitHub Actions**로 선택합니다.
+`Deploy facility map` 작업이 성공하면 다음 주소에서 열립니다.
+https://syeon9404.github.io/nursing-facility-dashboard/
+
+카카오 앱의 JavaScript 키 허용 도메인에 `https://syeon9404.github.io`를 추가합니다.
+지도용 JavaScript 키와 서버 호출용 REST API 키는 다릅니다.
+
+## 소방기관에서 시설까지 도로 경로 생성
+
+1. Settings → Secrets and variables → Actions → New repository secret.
+2. 이름은 `KAKAO_REST_API_KEY`, 값은 카카오 REST API 키를 입력합니다. 소스 파일에 넣지 않습니다.
+3. Actions → Update designated fire station routes → Run workflow.
+좌표 보완 작업은 경로 작업보다 먼저 실행됩니다. 남은 71개 시설을 대상으로 카카오 장소명과 기존 직선거리를 대조하며, 일치가 확인되지 않으면 자동으로 다른 기관을 연결하지 않습니다.
+
+4. 처음에는 facility_id `H0001`, limit `1`로 확인합니다. 이후 ID를 비우고 실행하면 아직 경로가 없는 시설을 최대 limit개 처리합니다(기본 100, 최대 1000).
+5. 완료되면 배포 작업이 자동 실행됩니다. API 이용 가능 여부와 쿼터는 해당 카카오 앱 설정을 따릅니다.
+
+출발지는 **데이터에 지정된 소방기관**, 도착지는 시설입니다. 카카오 조회 거리·시간은 조회 시각과 함께 별도로 표시하며 기존 분석값을 덮어쓰지 않습니다. 일반 자동차 길찾기이며 실제 소방차 도착시간을 뜻하지 않습니다.
+
+기관명과 좌표가 일치하지 않는 시설은 경로 생성을 건너뜁니다. 확인된 기관의 좌표를 해당 `data/map/facilities-*.json`의 `fire_station`에 반영해야 합니다. 근처 기관 검색 결과로 자동 대체하지 않습니다.
+
+- [카카오모빌리티 자동차 길찾기 API](https://developers.kakaomobility.com/guide/navi-api/directions.html)
+- [카카오 API 시작하기](https://developers.kakaomobility.com/guide/navi-api/start)
+
+## 데이터와 구현
+
+`data/map/manifest.json`에 표시용 데이터 목록이 있습니다. 원본 조사자료의 최종 지정기관과 기본/지역대 기관명이 정확히 일치할 때만 좌표를 연결했습니다. 단순 명칭 표기는 정규화한 뒤 최종 직선거리와의 차이가 60m 또는 2% 이내이고 후보 좌표가 60m 이내로 모일 때만 추가 연결했습니다(88개). 원본 엑셀이나 키는 업로드하지 않습니다. 기존 Streamlit 파일은 보존하며 Pages에는 지도용 파일만 배포합니다.
+
+로컬 확인: `python -m http.server 8000` (localhost 지도 사용 시 카카오 허용 도메인 등록 필요).
